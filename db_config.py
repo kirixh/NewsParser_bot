@@ -4,6 +4,8 @@ import time
 
 
 def update_db():
+    t1 = time.time()
+    print("Update started at: ", time.ctime(t1))
     db.connect()
     theme_parser = Parser('https://www.rbc.ru/story/')
     themes = theme_parser.find_stories()
@@ -27,9 +29,5 @@ def update_db():
                 old_story.text = parsed_article[1]
                 old_story.save()
     db.close()
-
-
-t1 = time.time()
-update_db()
-t2 = time.time()
-print("Time of update: ", t2 - t1)
+    t2 = time.time()
+    print("Time of update: ", t2 - t1)

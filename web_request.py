@@ -1,7 +1,6 @@
 import requests
 import dateparser
 from bs4 import BeautifulSoup
-import time
 
 
 class Parser:
@@ -43,20 +42,23 @@ class Parser:
             tags += tag + '\n'
         return tags, text
 
-
+'''
 t1 = time.time()
 print(Parser('https://www.rbc.ru/story/').find_stories())
 t2 = time.time()
 print("Time of execution: ", t2 - t1)
+'''
 
 """with open('rbc.html', 'w') as file:
     response = requests.get('https://www.rbc.ru/story/')
     response.encoding = 'utf-8'
     file.write(response.text)
-with open('rbc.html', 'r') as file:
-    html = file.read()"""
 
-# print(html)
+browser = webdriver.Firefox()
+browser.get('https://www.rbc.ru/story/')
+html = browser.page_source
+with open('rbc1.html', 'w') as file:
+    file.write(html)"""
 # soup = BeautifulSoup(html, "lxml")
 
 """
