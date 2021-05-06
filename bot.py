@@ -16,6 +16,16 @@ def send_welcome(message):
                           f' Этот бот умеет отправлять новости, полученные с сайта https://www.rbc.ru/story/\n'
                           f'Используйте /help чтобы увидеть весь список доступных команд.')
 
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    bot.reply_to(message, f'Список всех возможных команд:\n'
+                          f'1. /help - получить это сообщение.\n'
+                          f'2. /new_docs - показать <N> самых свежих новостей.\n'
+                          f'3. /new_topics - показать <N> самых свежих тем.\n'
+                          f'4. /get_topics - получить список всех тем в базе.\n'
+                          f'5. /topic <Номер/Название> - показать заголовки 5 самых свежих новостей в этой теме.\n'
+                          f'6. /doc <Номер/Название> - показать текст документа с заданным заголовком.\n')
+
 
 def nltk_convers(text):
     spec_symb = punctuation + '\n\xa0«»\t—…'
@@ -92,7 +102,7 @@ def topic(message):
         bot.send_message(message.chat.id, 'Темы с таким названием в нашей базе нет.')
 
 
-def dock(message):
+def doc(message):
     text = message.text
     if text.isdigit():
         find = Story.select().where(Story.id == text)
@@ -109,6 +119,15 @@ def dock(message):
                          f"{flags}{news.name.upper()}{flags}\n\n {news.text}\nИсточник: {news.url}")
     else:
         bot.send_message(message.chat.id, 'Новости с таким названием в нашей базе нет.')
+
+
+def describe_doc(message):
+
+    fdist = nltk_convers(message.text)
+    output_str = ''
+    for word in fdist:
+        output_str += f"{word[0]} - {word[1]}\n"
+    bot.send_message(message.chat.id, "Частота употреблений слов:\n", output_str)
 
 
 @bot.message_handler(commands=['get_topics'])
@@ -138,10 +157,16 @@ def command(message):
     bot.register_next_step_handler(message, topic)
 
 
-@bot.message_handler(commands=['dock'])
+@bot.message_handler(commands=['doc'])
 def command(message):
     bot.send_message(message.chat.id, "Какая новость?")
-    bot.register_next_step_handler(message, dock)
+    bot.register_next_step_handler(message, doc)
+
+
+@bot.message_handler(commands=['describe_doc'])
+def command(message):
+    bot.send_message(message.chat.id, "Какая новость?")
+    bot.register_next_step_handler(message, describe_doc)
 
 
 def threaded_func(func):
