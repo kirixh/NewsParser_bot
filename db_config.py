@@ -13,7 +13,10 @@ def update_db():
         story_parser = Parser(themes[theme][1])
         stories = story_parser.find_stories()
         for story in stories:
+            # print(stories[story][0])
             old_story = Story.select().where((Story.name == story) & (Story.last_upd < stories[story][0]))
+            if old_story:
+                old_story = old_story[0]
             if not Story.select().where(Story.name == story):
                 old_story = Story.create(name=story, theme=theme, url=stories[story][1])
             if old_story:
@@ -23,9 +26,10 @@ def update_db():
                 old_story.tags = parsed_article[0]
                 old_story.text = parsed_article[1]
                 old_story.save()
+    db.close()
 
 
 t1 = time.time()
 update_db()
 t2 = time.time()
-print("Time of execution: ", t2 - t1)
+print("Time of update: ", t2 - t1)

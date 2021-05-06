@@ -1,6 +1,6 @@
 import telebot
 from db_config import db, update_db, Theme, Story
-
+import time
 bot = telebot.TeleBot('1725519373:AAEwmtfr4Qr5stY9mV61iqaBtA80j8abLsk')
 
 
@@ -12,10 +12,8 @@ def send_welcome(message):
 def new_docs(message):
     if message.text.isdigit():
         number = int(message.text)
-        for news in Story.select().order_by(Story.last_upd.desc()):
-            if number == 0:
-                break
-            bot.send_message(message.chat.id, news.name + '\n' + news.text + '\n' + "Источник: " + news.url)
+        for news in Story.select().order_by(Story.last_upd.desc()).limit(number):
+            bot.send_message(message.chat.id, f"**********{news.name}**********\n\n {news.text}\nИсточник: {news.url}")
     else:
         bot.send_message(message.chat.id, 'Цифру, пожалуйста.')
 
@@ -26,8 +24,5 @@ def command_new_docs(message):
     bot.register_next_step_handler(message, new_docs)
 
 
-while True:
-    try:
-        bot.polling(none_stop=True, interval=0)
-    except Exception:
-        pass
+if __name__ == '__main__':
+    bot.polling(none_stop=True, interval=0)
