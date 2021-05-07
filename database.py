@@ -1,6 +1,7 @@
 from peewee import *
 
 db = SqliteDatabase('rbc_stories.db')
+users_db = SqliteDatabase('rbc_bot_users.db')
 
 
 class Theme(Model):
@@ -24,5 +25,15 @@ class Story(Model):
         database = db
 
 
+class User(Model):
+    user_id = IntegerField()
+    subscribed = BooleanField()
+
+    class Meta:
+        database = users_db
+
+
 db.create_tables([Theme, Story])
+users_db.create_tables([User])
+users_db.close()
 db.close()
