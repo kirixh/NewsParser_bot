@@ -1,7 +1,11 @@
 from peewee import *
 
-db = SqliteDatabase('rbc_stories.db')
-users_db = SqliteDatabase('rbc_bot_users.db')
+db = SqliteDatabase('rbc_stories.db')  # БД для сайта
+users_db = SqliteDatabase('rbc_bot_users.db')  # БД с пользователями бота
+
+"""
+Файл иницализирует базы данных сайта и пользоваетелей
+"""
 
 
 class Theme(Model):
