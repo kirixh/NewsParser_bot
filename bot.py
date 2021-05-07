@@ -20,21 +20,21 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    bot.reply_to(message, f'Список всех возможных команд:\n'
-                          f'1. /help - получить это сообщение.\n'
-                          f'2. /new_docs - показать <N> самых свежих новостей.\n'
-                          f'3. /new_topics - показать <N> самых свежих тем.\n'
-                          f'4. /get_topics - получить список всех тем в базе.\n'
-                          f'5. /get_docs <Номер/Название> - получить список всех новостей в данной теме.\n'
-                          f'6. /topic <Номер/Название> - показать заголовки 5 самых свежих новостей в этой теме.\n'
-                          f'7. /doc <Номер/Название> - показать текст документа с заданным заголовком.\n'
-                          f'8. /describe_doc <Номер/Название> - получить статистику по новости.\n'
-                          f'9. /subscribe - Подписаться на ежечасную рассылку новостей.\n'
-                          f'10 /unsubscribe - Отписаться от ежечасной рассылки новостей.\n')
+    bot.reply_to(message, 'Список всех возможных команд:\n'
+                          '1. /help - получить это сообщение.\n'
+                          '2. /new_docs - показать <N> самых свежих новостей.\n'
+                          '3. /new_topics - показать <N> самых свежих тем.\n'
+                          '4. /get_topics - получить список всех тем в базе.\n'
+                          '5. /get_docs <Номер/Название> - получить список всех новостей в данной теме.\n'
+                          '6. /topic <Номер/Название> - показать заголовки 5 самых свежих новостей в этой теме.\n'
+                          '7. /doc <Номер/Название> - показать текст документа с заданным заголовком.\n'
+                          '8. /describe_doc <Номер/Название> - получить статистику по новости.\n'
+                          '9. /subscribe - Подписаться на ежечасную рассылку новостей.\n'
+                          '10 /unsubscribe - Отписаться от ежечасной рассылки новостей.\n')
 
 
 @bot.message_handler(commands=['subscribe'])
-def command(message):
+def bot_subscribe(message):
     flag = subscribe(message.from_user.id)
     if flag:
         bot.reply_to(message, "Вы уже были подписаны.")
@@ -43,7 +43,7 @@ def command(message):
 
 
 @bot.message_handler(commands=['unsubscribe'])
-def command(message):
+def bot_unsubscribe(message):
     flag = unsubscribe(message.from_user.id)
     if flag:
         bot.reply_to(message, "Вы не были подписаны.")
@@ -61,37 +61,37 @@ def get_topics(message):
 
 
 @bot.message_handler(commands=['get_docs'])
-def command(message):
+def bot_get_docs(message):
     bot.send_message(message.chat.id, "Какая тема?")
     bot.register_next_step_handler(message, get_docs)
 
 
 @bot.message_handler(commands=['new_docs'])
-def command(message):
+def bot_new_docs(message):
     bot.send_message(message.chat.id, "Сколько новостей?")
     bot.register_next_step_handler(message, new_docs)
 
 
 @bot.message_handler(commands=['new_topics'])
-def command(message):
+def bot_new_topics(message):
     bot.send_message(message.chat.id, "Сколько тем?")
     bot.register_next_step_handler(message, new_topics)
 
 
 @bot.message_handler(commands=['topic'])
-def command(message):
+def bot_topic(message):
     bot.send_message(message.chat.id, "Какая тема?")
     bot.register_next_step_handler(message, topic)
 
 
 @bot.message_handler(commands=['doc'])
-def command(message):
+def bot_doc(message):
     bot.send_message(message.chat.id, "Какая новость?")
     bot.register_next_step_handler(message, doc)
 
 
 @bot.message_handler(commands=['describe_doc'])
-def command(message):
+def bot_describe_doc(message):
     bot.send_message(message.chat.id, "Какая новость?")
     bot.register_next_step_handler(message, describe_doc)
 

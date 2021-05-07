@@ -51,6 +51,3 @@ class Parser:
         for tag in sorted(tags_list):
             tags += tag + '\n'          # переводим список в одну строку
         return tags, text
-
-
-
