@@ -6,7 +6,7 @@ from bot_functions import analyse_flags, describe_doc, doc, \
     get_docs, new_docs, new_topics, mailing, topic, subscribe, unsubscribe
 from db_config import update_db, update_user_db, Theme, Story
 
-bot = telebot.TeleBot('1725519373:AAEwmtfr4Qr5stY9mV61iqaBtA80j8abLsk')
+bot = telebot.TeleBot('TOKEN')
 
 
 @bot.message_handler(commands=['start'])
