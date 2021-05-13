@@ -6,6 +6,7 @@ from db_config import users_db, Theme, Story, User
 nltk.download('punkt')
 nltk.download('stopwords')
 
+
 def nltk_convers(text):
     """
     Обрабатывает текст, выбрасывая из него стоп-слова и служебные символы
