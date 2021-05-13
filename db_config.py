@@ -7,9 +7,9 @@ def update_db():
     """
     Обновление базы данных сайта
     """
-    t1 = time.time()
+    start_time = time.time()
     try:
-        print("Update started at: ", time.ctime(t1))
+        print("Update started at: ", time.ctime(start_time))
         db.connect()
         theme_parser = Parser('https://www.rbc.ru/story/')
         themes = theme_parser.find_stories()  # парсим темы
@@ -32,8 +32,8 @@ def update_db():
                     old_story.text = parsed_article[1]
                     old_story.save()
         db.close()
-        t2 = time.time()
-        print("Time of update: ", t2 - t1)
+        end_time = time.time()
+        print("Time of update: ", end_time - start_time)
     except Exception as e:
         print("Update failed, raised ", e)
 

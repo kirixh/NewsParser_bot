@@ -34,6 +34,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Run tests
+        run: python3 tests.py
+
       - name: Install dependencies
         run: |
             python -m pip install --upgrade pip
