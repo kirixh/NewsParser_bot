@@ -3,9 +3,6 @@ from nltk.corpus import stopwords
 from string import punctuation
 from db_config import users_db, Theme, Story, User
 
-nltk.download('punkt')
-nltk.download('stopwords')
-
 
 def nltk_convers(text):
     """
