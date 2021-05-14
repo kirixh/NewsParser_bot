@@ -1,4 +1,5 @@
 import datetime
+import nltk
 import unittest
 from bot_functions import analyse_flags, nltk_convers
 from web_request import Parser
@@ -9,6 +10,8 @@ class CommandTest(unittest.TestCase):
     def setUp(self):  # Срабатывает каждый раз при запуске тестов
         self.parser1 = Parser('https://www.rbc.ru/story/6009a4899a79471a2909f35a')
         self.parser2 = Parser('https://www.rbc.ru/rbcfreenews/609a20029a7947068a8b7cf8')
+        nltk.download('punkt')
+        nltk.download('stopwords')
 
     def test_analyse_flags(self):  # Если вывод команды совпадает со списком имён настоящего пути.
         self.assertEqual(analyse_flags("Зеленский планирует встретиться с Путиным."
