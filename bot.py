@@ -3,8 +3,8 @@ import threading
 import time
 import schedule
 from bot_functions import analyse_flags, describe_doc, doc, \
-    get_docs, new_docs, new_topics, mailing, topic, subscribe, unsubscribe
-from db_config import update_db, update_user_db, Theme, Story
+    get_docs, new_docs, new_topics, topic, subscribe, unsubscribe
+from db_config import update_db, update_user_db, Theme, Story, User
 
 bot = telebot.TeleBot('1725519373:AAEwmtfr4Qr5stY9mV61iqaBtA80j8abLsk')
 
@@ -106,12 +106,28 @@ def threaded_func(func, *args):
     thread.join()  # закрываем поток
 
 
+def mailing(last_upd):
+    """
+    Отправка свежих новостей пользователям.
+    :param last_upd: время последней новости,
+     в форме списка из 1 элемента, чтобы можно было изменить внутри функции.
+    """
+    news = Story.select().where(Story.last_upd > last_upd[0]).order_by(Story.last_upd.desc())
+    for user in User.select().where(User.subscribed):  # пробегаем по всем подписчикам
+        for new_story in news:  # пробегаем по всем новейшим статьям
+            theme = "".join(analyse_flags(new_story.text))  # анализируем текст статьи для установки флагов
+            bot.send_message(user.user_id,
+                             f"{theme}{new_story.name.upper()}{theme}\n\n {new_story.text}\nИсточник: {new_story.url}")
+    if news:
+        last_upd[0] = news[0].last_upd
+
+
 mail_last_upd = [Story.select().order_by(Story.last_upd.desc()).limit(1)[0].last_upd]  # время последней новости
 bot_thread = threading.Thread(target=bot.polling)  # запускаем бота в отдельном потоке
 bot_thread.start()
 schedule.every(15).minutes.do(threaded_func, update_db)  # каждые 15 минут обновляется БД сайта в отдельном потоке
 # через 5 минут после обновления БД происходит рассылка новостей подписчикам
-schedule.every(20).minutes.do(threaded_func, mailing, mail_last_upd, bot)
+schedule.every(20).minutes.do(threaded_func, mailing, mail_last_upd)
 # Многопоточность используется чтобы не останавливать бота для обновления БД сайта.
 if __name__ == '__main__':
     while True:

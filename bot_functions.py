@@ -237,19 +237,3 @@ def subscribe(user_id):
     users_db.close()
     return flag
 
-
-def mailing(last_upd, bot):
-    """
-    Отправка свежих новостей пользователям.
-    :param bot: Бот
-    :param last_upd: время последней новости,
-     в форме списка из 1 элемента, чтобы можно было изменить внутри функции.
-    """
-    news = Story.select().where(Story.last_upd > last_upd[0]).order_by(Story.last_upd.desc())
-    for user in User.select().where(User.subscribed):  # пробегаем по всем подписчикам
-        for new_story in news:  # пробегаем по всем новейшим статьям
-            theme = "".join(analyse_flags(new_story.text))  # анализируем текст статьи для установки флагов
-            bot.send_message(user.user_id,
-                             f"{theme}{new_story.name.upper()}{theme}\n\n {new_story.text}\nИсточник: {new_story.url}")
-    if news:
-        last_upd[0] = news[0].last_upd
