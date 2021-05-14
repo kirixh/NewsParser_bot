@@ -111,7 +111,7 @@ bot_thread = threading.Thread(target=bot.polling)  # запускаем бота
 bot_thread.start()
 schedule.every(15).minutes.do(threaded_func, update_db)  # каждые 15 минут обновляется БД сайта в отдельном потоке
 # через 5 минут после обновления БД происходит рассылка новостей подписчикам
-schedule.every(20).minutes.do(threaded_func, mailing, mail_last_upd)
+schedule.every(20).minutes.do(threaded_func, mailing, mail_last_upd, bot)
 # Многопоточность используется чтобы не останавливать бота для обновления БД сайта.
 if __name__ == '__main__':
     while True:
