@@ -59,8 +59,12 @@ def new_docs(message, bot):
         number = int(message.text)
         for news in Story.select().order_by(Story.last_upd.desc()).limit(number):
             theme = "".join(analyse_flags(news.text))  # анализируем текст для определения флагов
-            bot.send_message(message.chat.id,
-                             f"{theme}{news.name.upper()}{theme}\n\n {news.text}\nИсточник: {news.url}")
+            output_str = f"{theme}{news.name.upper()}{theme}\n\n {news.text}\nИсточник: {news.url}"
+            if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+                for x in range(0, len(output_str), 4096):
+                    bot.send_message(message.chat.id, output_str[x:x + 4096])
+            else:
+                bot.send_message(message.chat.id, output_str)
     else:
         bot.send_message(message.chat.id, 'Цифру, пожалуйста.')
 
@@ -75,8 +79,12 @@ def new_topics(message, bot):
         number = int(message.text)
         for theme in Theme.select().order_by(Theme.pub_date.desc()).limit(number):
             flags = "".join(analyse_flags(theme.name))  # анализируем название темы для определения флагов
-            bot.send_message(message.chat.id,
-                             f"{flags}{theme.name.upper()}{flags}\n\n {theme.pub_date}\nИсточник: {theme.url}")
+            output_str = f"{flags}{theme.name.upper()}{flags}\n\n {theme.pub_date}\nИсточник: {theme.url}"
+            if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+                for x in range(0, len(output_str), 4096):
+                    bot.send_message(message.chat.id, output_str[x:x + 4096])
+            else:
+                bot.send_message(message.chat.id, output_str)
     else:
         bot.send_message(message.chat.id, 'Цифру, пожалуйста.')
 
@@ -104,7 +112,11 @@ def topic(message, bot):
             flags = "".join(analyse_flags(news.text))  # анализирует текст статьи
             output_str = f"{flags}{news.name.upper()}{flags}\n\n" \
                          f" {news.last_upd}\nИсточник: {news.url}"
-            bot.send_message(message.chat.id, output_str)
+            if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+                for x in range(0, len(output_str), 4096):
+                    bot.send_message(message.chat.id, output_str[x:x + 4096])
+            else:
+                bot.send_message(message.chat.id, output_str)
     else:
         output_str = 'Темы с таким названием в нашей базе нет.'
         bot.send_message(message.chat.id, output_str)
@@ -131,7 +143,11 @@ def doc(message, bot):
         news = news[0]
         flags = "".join(analyse_flags(news.text))  # анализируем текст для установки флагов
         output_str = f"{flags}{news.name.upper()}{flags}\n\n {news.text}\nИсточник: {news.url}"
-        bot.send_message(message.chat.id, output_str)
+        if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+            for x in range(0, len(output_str), 4096):
+                bot.send_message(message.chat.id, output_str[x:x + 4096])
+        else:
+            bot.send_message(message.chat.id, output_str)
     else:
         output_str = 'Новости с таким названием в нашей базе нет.'
         bot.send_message(message.chat.id, output_str)
@@ -164,7 +180,11 @@ def describe_doc(message, bot):
             mean_len += len(word[0])
         mean_len = mean_len // len(fdist)
         output_str = f"Частота употреблений слов:\n{output_str}\nСредняя длина слов - {mean_len}"
-        bot.send_message(message.chat.id, output_str)
+        if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+            for x in range(0, len(output_str), 4096):
+                bot.send_message(message.chat.id, output_str[x:x + 4096])
+        else:
+            bot.send_message(message.chat.id, output_str)
     else:
         output_str = 'Новости с таким названием в нашей базе нет.'
         bot.send_message(message.chat.id, output_str)
@@ -191,7 +211,11 @@ def get_docs(message, bot):
         for news in Story.select().where(Story.theme == text).order_by(Story.id):
             flags = "".join(analyse_flags(news.text))  # анализируем текст статьи для установки флагов
             output_str = f"{news.id}. {flags}{news.name}{flags}\n"
-            bot.send_message(message.chat.id, output_str)
+            if len(output_str) > 4096:  # обходим ограничение на длину сообщения
+                for x in range(0, len(output_str), 4096):
+                    bot.send_message(message.chat.id, output_str[x:x + 4096])
+            else:
+                bot.send_message(message.chat.id, output_str)
     else:
         output_str = 'Темы с таким названием в нашей базе нет.'
         bot.send_message(message.chat.id, output_str)
